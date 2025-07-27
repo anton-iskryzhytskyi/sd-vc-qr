@@ -1,0 +1,49 @@
+SD-JWT VC Benchmark Analysis - Summary Report
+==================================================
+
+Performance Rankings (lowest - highest across configurations):
+------------------------------------------------------------
+
+Issue Performance:
+  1. Ed25519             202 µs -    8.59 ms (Classical)
+  2. secp256k1           582 µs -    8.95 ms (Classical)
+  3. Dilithium-2         821 µs -    9.30 ms (Post-Quantum)
+  4. P-256              1.13 ms -    9.71 ms (Classical)
+  5. Falcon-512        10.72 ms -   19.16 ms (Post-Quantum)
+  6. SPHINCS+-128s   1430.86 ms - 1439.62 ms (Post-Quantum)
+
+Verify Performance:
+  1. Ed25519             203 µs -    3.16 ms (Classical)
+  2. Falcon-512          267 µs -    3.27 ms (Post-Quantum)
+  3. secp256k1           347 µs -    3.32 ms (Classical)
+  4. Dilithium-2         517 µs -    3.53 ms (Post-Quantum)
+  5. P-256               704 µs -    3.71 ms (Classical)
+  6. SPHINCS+-128s      1.27 ms -    4.27 ms (Post-Quantum)
+
+Credential Size Analysis:
+----------------------------------------
+  1. Ed25519            10.8 KB (Classical)
+  2. secp256k1          10.9 KB (Classical)
+  3. P-256              11.1 KB (Classical)
+  4. Falcon-512         17.8 KB (Post-Quantum)
+  5. SPHINCS+-128s      21.0 KB (Post-Quantum)
+  6. Dilithium-2        23.0 KB (Post-Quantum)
+
+Performance Consistency (Coefficient of Variation):
+----------------------------------------
+
+Issue Consistency (CV - lower is better):
+  1. SPHINCS+-128s    0.001 (Post-Quantum)
+  2. Ed25519          0.004 (Classical)
+  3. secp256k1        0.005 (Classical)
+  4. P-256            0.007 (Classical)
+  5. Dilithium-2      0.012 (Post-Quantum)
+  6. Falcon-512       0.053 (Post-Quantum)
+
+Verify Consistency (CV - lower is better):
+  1. P-256            0.003 (Classical)
+  2. secp256k1        0.004 (Classical)
+  3. Dilithium-2      0.005 (Post-Quantum)
+  4. Ed25519          0.007 (Classical)
+  5. Falcon-512       0.010 (Post-Quantum)
+  6. SPHINCS+-128s    0.026 (Post-Quantum)
