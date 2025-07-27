@@ -1,15 +1,13 @@
 
 #   cd infra
-#   docker-compose up --build
-version: '3.8'
-
+#   docker compose up
 services:
   benchmark:
     build:
       context: ..
       dockerfile: infra/Dockerfile
     privileged: true
-    cpus: '2'
+    cpus: 2
     mem_limit: 4g
     mem_reservation: 4g
     environment:
