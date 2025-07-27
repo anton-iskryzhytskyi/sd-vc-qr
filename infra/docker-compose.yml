@@ -1,0 +1,22 @@
+
+#   cd infra
+#   docker-compose up --build
+version: '3.8'
+
+services:
+  benchmark:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+    privileged: true
+    cpus: '2'
+    mem_limit: 4g
+    mem_reservation: 4g
+    environment:
+      - CARGO_TERM_COLOR=always
+    volumes:
+      - ./volume/raw-data:/analysis/raw-data
+      - ./volume/results:/analysis/results
+      - ./volume/artifacts:/analysis/artifacts
+    container_name: sd-jwt-vc-benchmark
+    restart: "no"
