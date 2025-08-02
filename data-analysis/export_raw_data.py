@@ -7,13 +7,11 @@ from collections import defaultdict
 def extract_raw_benchmark_data(criterion_dir='../target/criterion'):
     """Extract all raw timing and size data from Criterion benchmarks"""
     
-    # Dictionary to store all data
     timing_data = {}
     size_data = {}
     
     print("Extracting raw benchmark data...")
     
-    # Walk through all Criterion directories
     for root, dirs, files in os.walk(criterion_dir):
         if 'sample.json' in files:
             sample_path = os.path.join(root, 'sample.json')

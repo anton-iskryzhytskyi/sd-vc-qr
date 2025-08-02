@@ -1,5 +1,6 @@
 
 # Efficiency scores (Sign, Verify, Size, WNC, Geometric) for SD‑JWT VC
+# do I need geometric???
 
 import argparse
 from pathlib import Path
