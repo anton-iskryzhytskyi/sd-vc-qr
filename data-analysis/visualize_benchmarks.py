@@ -190,12 +190,9 @@ def create_scalability_analysis(combined_df, output_dir):
     plt.close()
 
 def create_heatmaps(combined_df, output_dir):
-    
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 8))
-    fig.suptitle('Comprehensive Performance Analysis (All Configurations)', fontsize=16, fontweight='bold')
-    
-    for operation, ax in [('issue', ax1), ('verify', ax2)]:
-        op_data = combined_df[combined_df['operation'] == operation]
+    def create_single_heatmap(operation, op_data, combined_df):
+        fig, ax = plt.subplots(1, 1, figsize=(12, 8))
+        fig.suptitle(f'{operation.title()} Performance Analysis (All Configurations)', fontsize=16, fontweight='bold')
         
         heatmap_data = op_data.pivot_table(
             values='median_time_ms',
@@ -245,10 +242,16 @@ def create_heatmaps(combined_df, output_dir):
         for i in range(1, len(field_counts)):
             separator_pos = i * len(field_sizes) - 0.5
             ax.axvline(x=separator_pos, color='black', linewidth=1, alpha=0.7)
+
+        plt.tight_layout()
+        return fig
     
-    plt.tight_layout()
-    plt.savefig(output_dir / 'comprehensive_heatmap.png', dpi=300, bbox_inches='tight')
-    plt.close()
+    for operation in ['issue', 'verify']:
+        op_data = combined_df[combined_df['operation'] == operation]
+        fig = create_single_heatmap(operation, op_data, combined_df)
+        
+        plt.savefig(output_dir / f'{operation}_performance_heatmap.png', dpi=300, bbox_inches='tight')
+        plt.close()
 
 def create_size_heatmaps(combined_df, output_dir):
     
@@ -611,7 +614,8 @@ def main():
     print("\nGenerated files:")
     print("  - algorithm_comparison.png")
     print("  - scalability_analysis.png")
-    print("  - comprehensive_heatmap.png")
+    print("  - issue_performance_heatmap.png")
+    print("  - verify_performance_heatmap.png")
     print("  - size_heatmaps.png")
     print("  - variance_analysis.png")
     print("  - benchmark_summary_report.txt")
