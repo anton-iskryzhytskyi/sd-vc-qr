@@ -5,20 +5,20 @@ Performance Rankings (lowest - highest across configurations):
 ------------------------------------------------------------
 
 Issue Performance:
-  1. Ed25519             202 µs -    8.59 ms (Classical)
-  2. secp256k1           582 µs -    8.95 ms (Classical)
-  3. Dilithium-2         821 µs -    9.30 ms (Post-Quantum)
-  4. P-256              1.13 ms -    9.71 ms (Classical)
-  5. Falcon-512        10.72 ms -   19.16 ms (Post-Quantum)
-  6. SPHINCS+-128s   1430.86 ms - 1439.62 ms (Post-Quantum)
+  1. Ed25519             202 µs -    8.62 ms (Classical)
+  2. secp256k1           580 µs -    9.16 ms (Classical)
+  3. Dilithium-2         824 µs -    9.29 ms (Post-Quantum)
+  4. P-256              1.13 ms -    9.50 ms (Classical)
+  5. Falcon-512        10.49 ms -   19.16 ms (Post-Quantum)
+  6. SPHINCS+-128s   1432.17 ms - 1607.20 ms (Post-Quantum)
 
 Verify Performance:
-  1. Ed25519             203 µs -    3.16 ms (Classical)
+  1. Ed25519             203 µs -    3.13 ms (Classical)
   2. Falcon-512          267 µs -    3.27 ms (Post-Quantum)
-  3. secp256k1           347 µs -    3.32 ms (Classical)
+  3. secp256k1           347 µs -    3.33 ms (Classical)
   4. Dilithium-2         517 µs -    3.53 ms (Post-Quantum)
-  5. P-256               704 µs -    3.71 ms (Classical)
-  6. SPHINCS+-128s      1.27 ms -    4.27 ms (Post-Quantum)
+  5. P-256               706 µs -    3.67 ms (Classical)
+  6. SPHINCS+-128s      1.25 ms -    4.28 ms (Post-Quantum)
 
 Credential Size Analysis:
 ----------------------------------------
@@ -33,17 +33,17 @@ Performance Consistency (Coefficient of Variation):
 ----------------------------------------
 
 Issue Consistency (CV - lower is better):
-  1. SPHINCS+-128s    0.001 (Post-Quantum)
-  2. Ed25519          0.004 (Classical)
-  3. secp256k1        0.005 (Classical)
-  4. P-256            0.007 (Classical)
+  1. SPHINCS+-128s    0.004 (Post-Quantum)
+  2. P-256            0.004 (Classical)
+  3. Ed25519          0.008 (Classical)
+  4. secp256k1        0.009 (Classical)
   5. Dilithium-2      0.012 (Post-Quantum)
-  6. Falcon-512       0.053 (Post-Quantum)
+  6. Falcon-512       0.043 (Post-Quantum)
 
 Verify Consistency (CV - lower is better):
-  1. P-256            0.003 (Classical)
-  2. secp256k1        0.004 (Classical)
-  3. Dilithium-2      0.005 (Post-Quantum)
-  4. Ed25519          0.007 (Classical)
-  5. Falcon-512       0.010 (Post-Quantum)
-  6. SPHINCS+-128s    0.026 (Post-Quantum)
+  1. Falcon-512       0.005 (Post-Quantum)
+  2. secp256k1        0.005 (Classical)
+  3. P-256            0.006 (Classical)
+  4. Ed25519          0.006 (Classical)
+  5. Dilithium-2      0.008 (Post-Quantum)
+  6. SPHINCS+-128s    0.025 (Post-Quantum)
