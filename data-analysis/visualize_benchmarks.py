@@ -28,6 +28,11 @@ COLORS = {
 CLASSICAL_ALGOS = ['Ed25519', 'Secp256k1', 'P256']
 QUANTUM_ALGOS = ['Dilithium2', 'Falcon512', 'SPHINCS+128s']
 
+# Weighted Normalized Composite (WNC) score weights
+WNC_WEIGHT_SIGN = 0.2      # signing latency weight
+WNC_WEIGHT_VERIFY = 0.5    # verification latency weight
+WNC_WEIGHT_SIZE = 0.3      # credential size weight
+
 
 plt.rcParams.update({
     'figure.dpi': 300,
@@ -121,40 +126,66 @@ def create_algorithm_comparison(combined_df, output_dir):
     
     ax2.axvline(x=len(CLASSICAL_ALGOS)-0.5, color='gray', linestyle='--', alpha=0.5)
     
-    ratio_data = []
+    # Weighted Normalized Composite (WNC) score calculation
+    # WNC_i = w_s * T_sign_norm + w_v * T_verify_norm + w_z * S_norm
+
+    size_data = {}
     for algo in algo_order:
         if algo in issue_sorted.index and algo in verify_sorted.index:
-            ratio = issue_sorted[algo] / verify_sorted[algo]
-            ratio_data.append((algo, ratio))
+            size_data[algo] = combined_df[combined_df['wallet_type'] == algo]['jwt_size_bytes'].median()
     
-    algos, ratios = zip(*ratio_data)
-    ax3.bar(range(len(ratios)), ratios, color=[COLORS[algo] for algo in algos])
-    ax3.set_ylabel('Issue/Verify Ratio')
-    ax3.set_title('Issuance vs Verification Ratio')
+    min_issue_time = issue_sorted.min()
+    min_verify_time = verify_sorted.min()
+    min_size = min(size_data.values())
+    
+    wnc_data = []
+    for algo in algo_order:
+        if algo in issue_sorted.index and algo in verify_sorted.index:
+            # Normalized each metric by dividing by the best-performing algorithm
+            t_sign_norm = issue_sorted[algo] / min_issue_time
+            t_verify_norm = verify_sorted[algo] / min_verify_time
+            s_norm = size_data[algo] / min_size
+            
+            # Calculated weighted normalized composite score
+            wnc_score = WNC_WEIGHT_SIGN * t_sign_norm + WNC_WEIGHT_VERIFY * t_verify_norm + WNC_WEIGHT_SIZE * s_norm
+            wnc_data.append((algo, wnc_score))
+    
+    algos, wnc_scores = zip(*wnc_data)
+    ax3.bar(range(len(wnc_scores)), wnc_scores, color=[COLORS[algo] for algo in algos])
+    ax3.set_yscale('log')
+    ax3.set_ylabel('WNC Score (log scale)')
+    ax3.set_title('Weighted Normalized Composite Score')
     ax3.set_xticks(range(len(algos)))
     ax3.set_xticklabels([ALGO_LABELS[algo] for algo in algos], rotation=45)
-    ax3.grid(True, alpha=0.3)
+    ax3.grid(True, alpha=0.3, which='both')
     
-    for i, ratio in enumerate(ratios):
-        ax3.text(i, ratio * 1.05, f'{ratio:.1f}×', ha='center', va='bottom', fontsize=8)
+    for i, score in enumerate(wnc_scores):
+        ax3.text(i, score * 1.05, f'{score:.2f}', ha='center', va='bottom', fontsize=8)
     
     combined_perf = []
+
     for algo in algo_order:
         if algo in issue_sorted.index and algo in verify_sorted.index:
-            geom_mean = np.sqrt(issue_sorted[algo] * verify_sorted[algo])
+            # Normalize each metric by dividing by the best-performing algorithm
+            t_sign_norm = issue_sorted[algo] / min_issue_time
+            t_verify_norm = verify_sorted[algo] / min_verify_time
+            s_norm = size_data[algo] / min_size
+            
+            # Calculate 3-factor geometric mean: (T_sign × T_verify × S)^(1/3)
+            geom_mean = (t_sign_norm * t_verify_norm * s_norm) ** (1/3)
             combined_perf.append((algo, geom_mean))
     
     algos, perfs = zip(*combined_perf)
     ax4.bar(range(len(perfs)), perfs, color=[COLORS[algo] for algo in algos])
     ax4.set_yscale('log') # the same reason as above
-    ax4.set_ylabel('Combined Performance (ms)')
+    ax4.set_ylabel('Normalized Performance Score')
     ax4.set_title('Overall Performance (Geometric Mean)')
     ax4.set_xticks(range(len(algos)))
     ax4.set_xticklabels([ALGO_LABELS[algo] for algo in algos], rotation=45)
     ax4.grid(True, alpha=0.3, which='both')
     
     for i, perf in enumerate(perfs):
-        ax4.text(i, perf * 1.1, _fmt_speed(perf), ha='center', va='bottom', fontsize=8)
+        ax4.text(i, perf * 1.1, f'{perf:.2f}', ha='center', va='bottom', fontsize=8)
     
     plt.tight_layout()
     plt.savefig(output_dir / 'algorithm_comparison.png', dpi=300, bbox_inches='tight')
